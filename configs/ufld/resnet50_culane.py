@@ -12,7 +12,7 @@ model = dict(
 
 backbone = dict(
     name='ResNetWrapper',
-    resnet='resnet18',
+    resnet='resnet50',
     pretrained=True,
     replace_stride_with_dilation=[False, False, False],
     out_conv=False,
