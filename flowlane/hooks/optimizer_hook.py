@@ -8,10 +8,8 @@ class OptimizerHook(Hook):
         self.priority = priority
         
     def train_iter_end(self, trainer):
-        if 'Lars' in trainer.cfg['optimizer']['name']:
-            trainer.optimizer.clear_gradients()
-        else:
-            trainer.optimizer.clear_grad()
+    
+        trainer.optimizer.zero_grad()
 
         loss = 0
         loss = trainer.outputs['loss']
@@ -26,10 +24,7 @@ class OptimizerHook(Hook):
                 trainer.scaler.update()
         else:
             loss.backward()
-            if 'lars' in trainer.optimizer.type:
-                trainer.optimizer.minimize(loss)
-            else:
-                trainer.optimizer.step()
+            trainer.optimizer.step()
 
         if 'loss' not in trainer.outputs:
             trainer.outputs['loss'] = loss

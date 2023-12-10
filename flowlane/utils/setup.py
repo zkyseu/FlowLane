@@ -31,6 +31,6 @@ def setup(args, cfg):
     logger.info('Configs: {}'.format(cfg))
 
     if oneflow.cuda.is_available():
-        oneflow.cuda.set_device('gpu')
+        oneflow.cuda.set_device('cuda')
     else:
         oneflow.cuda.set_device('cpu')

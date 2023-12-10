@@ -47,7 +47,7 @@ class Trainer:
         self.logger = logging.getLogger(__name__)
         self.cfg = cfg
         self.output_dir = cfg.output_dir
-        self.best_dir = cfg.best_di
+        self.best_dir = cfg.best_dir
 
         dp_rank = oneflow.env.get_rank()
         self.log_interval = cfg.log_config.interval
@@ -60,7 +60,7 @@ class Trainer:
             np.random.seed(seed)
             random.seed(seed)
 
-        assert cfg['device'] in ['cpu', 'gpu']
+        assert cfg['device'] in ['cpu', 'cuda']
         self.device = device = oneflow.device(cfg['device'])
         self.logger.info('train with oneflow {} on {} device'.format(
             oneflow.__version__, cfg['device']))
@@ -83,9 +83,12 @@ class Trainer:
 
         self.model = build_model(cfg).to(self.device)
         self.logger.info(self.model)
+        # amp training
+        self.use_amp = cfg.get('use_amp',
+                               False)  #if 'use_amp' in cfg else False
 
         n_parameters = sum(p.numel() for p in self.model.parameters()
-                           if p.require_gradient).item()
+                           if p.requires_grad)
 
         i = int(math.log(n_parameters, 10) // 3)
         size_unit = ['', 'K', 'M', 'B', 'T', 'Q']
@@ -97,14 +100,12 @@ class Trainer:
             self.cfg.dataset.train, self.cfg, is_train=True, device=self.device, distributed=self.distributed)          
         self.iters_per_epoch = len(self.train_dataloader)
 
-        # build learning rate
-        self.lr_scheduler = build_lr_scheduler(cfg.lr_scheduler,
-                                                self.iters_per_epoch)
-        
         # build optimizer
-        self.optimizer = build_optimizer(cfg.optimizer, self.lr_scheduler,
-                                         [self.model])
+        self.optimizer = build_optimizer(self.cfg, self.model)
 
+        # build learning rate
+        self.lr_scheduler = build_lr_scheduler(self.cfg, self.optimizer)
+        
         #distributed training
         if self.distributed:
             model = oneflow.nn.parallel.DistributedDataParallel(model, broadcast_buffers=False)

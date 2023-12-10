@@ -31,7 +31,10 @@ def build_dataloader(split_cfg, cfg, is_train=True,drop_last = True,distributed=
     if distributed:
         sampler = flow.utils.data.distributed.DistributedSampler(dataset)
     else:
-        sampler = flow.utils.data.RandomSampler(dataset)
+        if not shuffle:
+            sampler = flow.utils.data.SequentialSampler(dataset)
+        else:
+            sampler = flow.utils.data.RandomSampler(dataset)
 
     batch_sampler = flow.utils.data.BatchSampler(
         sampler, cfg.batch_size, drop_last=drop_last
@@ -43,7 +46,6 @@ def build_dataloader(split_cfg, cfg, is_train=True,drop_last = True,distributed=
         batch_sampler=batch_sampler,
         num_workers=cfg.num_workers,
         collate_fn = partial(collate, samples_per_gpu=samples_per_gpu),
-        worker_init_fn=init_fn,
-        shuffle=shuffle)
+        worker_init_fn=init_fn,)
     
     return dataloader

@@ -15,19 +15,19 @@ backbone = dict(
     resnet='resnet50',
     pretrained=True,
     replace_stride_with_dilation=[False, False, False],
-    out_conv=False,
+    out_conv=True,
 )
 
 featuremap_out_channel = 512
 
-griding_num = 100
-num_classes = 6
+griding_num = 200
+num_classes = 4
 heads = dict(name='LaneCls',
-        dim = (griding_num + 1, 56, num_classes))
+        dim = (griding_num + 1, 18, num_classes))
 
-epochs = 150
+epochs = 50
 batch_size = 30
-total_iter = (3616 // batch_size + 1) * epochs 
+total_iter = (88880 // batch_size + 1) * epochs 
 
 lr_scheduler = dict(
     name = 'PolynomialLR',
@@ -42,19 +42,19 @@ optimizer = dict(
   momentum = 0.9
 )
 
-ori_img_h = 720
-ori_img_w = 1280
+ori_img_h = 590 
+ori_img_w = 1640 
 img_h = 288
 img_w = 800
 cut_height=0
-sample_y = range(710, 150, -10)
+sample_y = range(589, 230, -20)
 
 img_norm = dict(
-    mean=[0.5, 0.5, 0.5],
-    std=[0.5, 0.5, 0.5]
+    mean=[103.939, 116.779, 123.68],
+    std=[1., 1., 1.]
 )
 
-row_anchor = 'tusimple_row_anchor'
+row_anchor = 'culane_row_anchor'
 
 train_transform = [
     dict(name='RandomRotation', degree=(-6, 6)),
@@ -73,7 +73,7 @@ val_transform = [
     dict(name='ToTensor', keys=['img']),
 ]
 
-dataset_path = '/home/fyj/zky/tusimple'
+dataset_path = '/home/kunyangzhou/project/dataset'
 
 dataset = dict(
     train=dict(
@@ -105,15 +105,15 @@ custom_config = [dict(
     name = 'EvaluateHook'
     )]
 
-device = 'gpu'
+device = 'cuda'
 seed =  0
 save_inference_dir = './inference'
 output_dir = './output_dir'
 best_dir = './output_dir/best_dir'
 pred_save_dir = './pred_save'
 num_workers = 4
-num_classes = 6 + 1
+num_classes = 5 + 1
+y_pixel_gap = 20
 view = False
 ignore_label = 255
-test_json_file='/home/fyj/zky/tusimple/test_label.json'
 seg=False

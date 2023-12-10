@@ -21,7 +21,7 @@ class LaneCls(nn.Module):
         self.cls = oneflow.nn.Sequential(
             oneflow.nn.Linear(1800, 2048),
             oneflow.nn.ReLU(),
-            oneflow.nn.Linear(2048, self.total_dim),
+            oneflow.nn.Linear(2048, int(self.total_dim)),
         )
 
     def postprocess(self, out, localization_type='rel', flip_updown=True):
@@ -51,7 +51,7 @@ class LaneCls(nn.Module):
     def loss(self, output, batch):
         criterion = SoftmaxFocalLoss(2)
 
-        cls_loss = criterion(output['cls'], batch['cls_label'])
+        cls_loss = criterion(output['cls'], batch['cls_label'].to(output['cls'].device))
         
         ret = {'loss': cls_loss}
 

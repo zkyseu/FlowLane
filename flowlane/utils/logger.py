@@ -7,7 +7,7 @@ import oneflow as flow
 logger_initialized = []
 
 
-def setup_logger(output=None, name="pplanedet"):
+def setup_logger(output=None, name="flowlane"):
     """
     Initialize the passl logger and set its verbosity level to "INFO".
     Args:

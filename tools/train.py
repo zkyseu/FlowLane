@@ -14,7 +14,7 @@ from flowlane.engine.engine import Trainer
 def parse_args():
     parser = argparse.ArgumentParser(description='PPLanedet')
     parser.add_argument(
-        '-c', '--config-file', metavar="FILE", help='config file path')
+        'config_file', metavar="FILE", help='config file path')
     parser.add_argument(
         '-o',
         '--override',

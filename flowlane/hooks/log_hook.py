@@ -109,7 +109,7 @@ class LogHook(Hook):
         else:
             log_dict['iter'] = trainer.current_iter
 
-        cur_lr = trainer.lr_scheduler.get_lr()
+        cur_lr = trainer.optimizer.param_groups[0]['lr']
         if isinstance(cur_lr, list):
             log_dict['lr'] = cur_lr[0]
         elif isinstance(cur_lr, dict):
@@ -137,9 +137,6 @@ class LogHook(Hook):
 
     def train_iter_end(self, trainer):
         for k, v in trainer.outputs.items():
-            # add loss to visualdl
-            if trainer.enable_visual:
-                trainer.vdl_logger.add_scalar(k, v, step=trainer.current_iter)
             if k not in trainer.logs:
                 if 'loss' in k:
                     fmt = ':.4e'

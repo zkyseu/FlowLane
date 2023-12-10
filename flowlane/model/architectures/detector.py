@@ -16,9 +16,9 @@ class Detector(nn.Module):
     def get_lanes(self, output):
         return self.heads.get_lanes(output)
 
-    def forward(self, batch):
+    def forward(self, batch, device='cuda'):
         output = {}
-        fea = self.backbone(batch['img'])
+        fea = self.backbone(batch['img'].to(device))
 
         if self.aggregator:
             fea[-1] = self.aggregator(fea[-1])
