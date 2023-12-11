@@ -6,7 +6,7 @@ Modern methods mainly regard lane detection as a problem of pixel-wise segmentat
 ## Models
 | Architecture| Backbone |Dataset | Metric | Config| Checkpoints  |
 |-------------|----------|--------|--------|-------|--------------|
-|UFLD|ResNet50|CULane|F1: 69.30|[config](resnet50_culane.py)|[model](https://github.com/zkyseu/PPlanedet/releases/download/UFLD/model_culane.pd)
+|UFLD|ResNet50|CULane|F1: 69.30|[config](resnet50_culane.py)|[model](https://github.com/zkyseu/FlowLane/releases/download/weight/model.pth)
 
 Note:
 UFLD reproduced in pplanedet dose not adopt segmentation loss as an auxiliary loss. Therefore, F1 and accuracy are lower than those in official paper.
