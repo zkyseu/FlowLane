@@ -14,7 +14,7 @@ from ..datasets.builder import build_dataloader
 from ..model import build_model
 from ..solver import build_lr_scheduler, build_optimizer
 from ..datasets import IterLoader
-from ..hooks.checkpoint_hook import save_checkpoint
+from ..hooks.checkpoint_hook import save_checkpoint,save_on_master
 
 class Trainer:
     r"""
@@ -329,3 +329,18 @@ class Trainer:
         self.logger.info("There are {}/{} variables loaded into {}.".format(
             num_params_loaded,
             len(model_state_dict), self.model.__class__.__name__))
+
+    def export(self,checkpoint_path):
+        """
+        export model
+        """
+        self.load(checkpoint_path)
+        self.logger.info(f'finish loading model from {checkpoint_path}....')
+        new_weight = OrderedDict()
+        for k,v in self.model.state_dict().items():
+            new_weight[k] = v
+        self.model.load_state_dict(new_weight)
+        save_dict = dict(state_dict = self.model.state_dict())
+        save_path = os.path.join(self.output_dir,'export_model.pth')
+        save_on_master(save_dict,save_path)
+        self.logger.info(f'Successfully export model to {save_path}')

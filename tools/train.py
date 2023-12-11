@@ -89,6 +89,11 @@ def main(args, cfg):
     elif args.load:
         trainer.load(args.load)
 
+    # export model to inference or pretrain weight form
+    if args.export:
+        trainer.export(args.export)
+        return 
+
     if args.evaluate_only:
         trainer.val()
         return
