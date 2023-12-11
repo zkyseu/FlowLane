@@ -9,4 +9,4 @@ Modern methods mainly regard lane detection as a problem of pixel-wise segmentat
 |UFLD|ResNet50|CULane|F1: 69.30|[config](resnet50_culane.py)|[model](https://github.com/zkyseu/FlowLane/releases/download/weight/ufld_model.pth)
 
 Note:
-UFLD reproduced in pplanedet dose not adopt segmentation loss as an auxiliary loss. Therefore, F1 and accuracy are lower than those in official paper.
+UFLD reproduced in flowlane dose not adopt segmentation loss as an auxiliary loss. Therefore, F1 and accuracy are lower than those in official paper.
