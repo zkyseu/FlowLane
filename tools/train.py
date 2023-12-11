@@ -12,9 +12,9 @@ from flowlane.utils.setup import setup
 from flowlane.engine.engine import Trainer
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='PPLanedet')
+    parser = argparse.ArgumentParser(description='FlowLane')
     parser.add_argument(
-        'config_file', metavar="FILE", help='config file path')
+        '-c', '--config-file', metavar="FILE", help='config file path')
     parser.add_argument(
         '-o',
         '--override',

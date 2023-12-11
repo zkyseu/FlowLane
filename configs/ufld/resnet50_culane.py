@@ -26,7 +26,7 @@ heads = dict(name='LaneCls',
         dim = (griding_num + 1, 18, num_classes))
 
 epochs = 50
-batch_size = 30
+batch_size = 60
 total_iter = (88880 // batch_size + 1) * epochs 
 
 lr_scheduler = dict(

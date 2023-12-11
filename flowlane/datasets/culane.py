@@ -6,7 +6,8 @@ from .builder import DATASETS
 import cv2
 from tqdm import tqdm
 import logging
-from ..utils.culane_metric import culane_metric
+from ..utils import culane_metric
+#from ..utils.culane_metric import culane_metric
 
 LIST_FILE = {
     'train': 'list/train_gt.txt',

@@ -86,6 +86,9 @@ class Trainer:
         # amp training
         self.use_amp = cfg.get('use_amp',
                                False)  #if 'use_amp' in cfg else False
+        # ema training
+        self.use_ema = cfg.get('use_ema',
+                               False)  #if 'use_amp' in cfg else False
 
         n_parameters = sum(p.numel() for p in self.model.parameters()
                            if p.requires_grad)
@@ -225,7 +228,7 @@ class Trainer:
 
         for i, data in enumerate(tqdm(self.val_loader, desc=f'Validate')):
             with oneflow.no_grad():
-                output = self.model(data,mode = 'test')
+                output = self.model(data)
                 if world_size > 1:
                     seg_list = []
                     if 'seg' in output.keys():
@@ -284,8 +287,8 @@ class Trainer:
 
         self.load(resume_weight=checkpoint['state_dict'])
 #        self.model.set_state_dict(checkpoint['state_dict'])
-        self.optimizer.set_state_dict(checkpoint['optimizer'])
-        self.lr_scheduler.set_state_dict(checkpoint['lr_scheduler'])
+        self.optimizer.load_state_dict(checkpoint['optimizer'])
+        self.lr_scheduler.load_state_dict(checkpoint['lr_scheduler'])
 
         self.logger.info('Resume training from {} success!'.format(
             checkpoint_path))
@@ -322,7 +325,7 @@ class Trainer:
             else:
                 model_state_dict[k] = para_state_dict[k]
                 num_params_loaded += 1
-        self.model.set_dict(model_state_dict)
+        self.model.load_state_dict(model_state_dict)
         self.logger.info("There are {}/{} variables loaded into {}.".format(
             num_params_loaded,
             len(model_state_dict), self.model.__class__.__name__))
