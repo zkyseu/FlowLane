@@ -260,10 +260,10 @@ class Trainer:
         if out > self.best_metric:
             self.best_metric = out
             self.best_epoch = self.current_epoch + 1
-            filename = 'best_epoch_{}.pd'.format(self.current_epoch + 1)
+            filename = 'best_epoch_{}.pth'.format(self.current_epoch + 1)
             ckpt_path = os.path.join(self.output_dir, filename)
             self.best_model_list.append(ckpt_path)
-            save_checkpoint(self.output_dir,self,filename_tmpl='best_epoch_{}.pd',save_optimizer=False,create_symlink=False)
+            save_checkpoint(self.output_dir,self,filename_tmpl='best_epoch_{}.pth',save_optimizer=False,create_symlink=False)
             if len(self.best_model_list)>1:
                 remove_model = self.best_model_list.popleft()
                 os.unlink(remove_model)
